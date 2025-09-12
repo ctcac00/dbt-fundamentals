@@ -5,4 +5,7 @@ packages:
 - package: dbt-labs/dbt_utils
   name: dbt_utils
   version: 1.3.0
-sha1_hash: 7a6b8c81bb0585cb8bca2d909cbfecaba8145a01
+- package: infinitelambda/dq_tools
+  name: dq_tools
+  version: 1.10.3
+sha1_hash: 1100578cb2bbc87d125e10ae355e4909051a7721
