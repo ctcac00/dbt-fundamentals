@@ -1,20 +1,5 @@
 packages:
-- package: dbt-labs/audit_helper
-  name: audit_helper
-  version: 0.12.1
-- package: godatadriven/dbt_date
-  name: dbt_date
-  version: 0.16.1
-- package: metaplane/dbt_expectations
-  name: dbt_expectations
-  version: 0.10.9
-- package: tnightengale/dbt_meta_testing
-  name: dbt_meta_testing
-  version: 0.3.6
-- package: dbt-labs/dbt_utils
-  name: dbt_utils
-  version: 1.3.0
-- package: infinitelambda/dq_tools
-  name: dq_tools
-  version: 1.10.3
-sha1_hash: be590aa81b1865c4ad9eadafef348f51400c87cd
+  - name: dbt_utils
+    package: dbt-labs/dbt_utils
+    version: 1.3.0
+sha1_hash: 226ae69cdfbc9367e2aa2c472b01f99dbce11de0
