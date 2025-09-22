@@ -25,6 +25,7 @@ order_payments as (
 
     from orders
     left join order_payments using (order_id)
+    where order_date <= Date('2018-01-31')
 )
 
 select * from final
