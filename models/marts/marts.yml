@@ -1,5 +1,213 @@
 version: 2
 
+semantic_models:
+  - name: orders_semantic
+    description: Orders fact table for revenue and order analysis
+    model: ref('fct_orders')
+    dimensions:
+      - name: order_id
+        type: categorical
+        description: Unique identifier for each order
+      - name: customer_id
+        type: categorical
+        description: Customer who placed the order
+      - name: order_date
+        type: time
+        type_params:
+          time_granularity: day
+        description: Date when the order was placed
+    measures:
+      - name: amount
+        agg: sum
+        description: Total order amount in dollars
+      - name: order_count
+        agg: count
+        description: Count of orders
+      - name: avg_order_value
+        agg: average
+        expr: amount
+        description: Average order value
+
+  - name: customers_semantic
+    description: Customer dimension table for customer analysis
+    model: ref('dim_customers')
+    dimensions:
+      - name: customer_id
+        type: categorical
+        description: Unique identifier for each customer
+      - name: first_name
+        type: categorical
+        description: Customer first name
+      - name: last_name
+        type: categorical
+        description: Customer last name
+      - name: first_order_date
+        type: time
+        type_params:
+          time_granularity: day
+        description: Date of customer's first order
+      - name: most_recent_order_date
+        type: time
+        type_params:
+          time_granularity: day
+        description: Date of customer's most recent order
+    measures:
+      - name: customer_count
+        agg: count
+        description: Count of customers
+      - name: total_lifetime_value
+        agg: sum
+        expr: lifetime_value
+        description: Sum of all customer lifetime values
+      - name: avg_lifetime_value
+        agg: average
+        expr: lifetime_value
+        description: Average customer lifetime value
+      - name: total_orders_by_customers
+        agg: sum
+        expr: number_of_orders
+        description: Total orders placed by all customers
+
+  - name: payments_semantic
+    description: Payment data for payment analysis
+    model: ref('stg_stripe__payments')
+    dimensions:
+      - name: payment_id
+        type: categorical
+        description: Unique identifier for each payment
+      - name: order_id
+        type: categorical
+        description: Order associated with the payment
+      - name: payment_method
+        type: categorical
+        description: Method used for payment
+      - name: status
+        type: categorical
+        description: Payment status (success, fail, etc.)
+      - name: created_at
+        type: time
+        type_params:
+          time_granularity: day
+        description: Date when payment was created
+    measures:
+      - name: payment_amount
+        agg: sum
+        expr: amount
+        description: Total payment amount
+      - name: payment_count
+        agg: count
+        description: Count of payments
+      - name: successful_payments
+        agg: count
+        expr: case when status = 'success' then 1 else 0 end
+        description: Count of successful payments
+
+metrics:
+  # Revenue Metrics
+  - name: total_revenue
+    label: Total Revenue
+    description: Total revenue from all successful orders
+    type: simple
+    type_params:
+      measure: amount
+
+  - name: monthly_revenue
+    label: Monthly Revenue
+    description: Monthly revenue trend
+    type: simple
+    type_params:
+      measure: amount
+
+  - name: average_order_value
+    label: Average Order Value
+    description: Average value per order
+    type: simple
+    type_params:
+      measure: avg_order_value
+
+  # Order Metrics
+  - name: total_orders
+    label: Total Orders
+    description: Total number of orders placed
+    type: simple
+    type_params:
+      measure: order_count
+
+  - name: monthly_orders
+    label: Monthly Orders
+    description: Monthly order count trend
+    type: simple
+    type_params:
+      measure: order_count
+
+  # Customer Metrics
+  - name: total_customers
+    label: Total Customers
+    description: Total number of customers
+    type: simple
+    type_params:
+      measure: customer_count
+
+  - name: customer_lifetime_value
+    label: Customer Lifetime Value
+    description: Average customer lifetime value
+    type: simple
+    type_params:
+      measure: avg_lifetime_value
+
+  - name: total_customer_ltv
+    label: Total Customer LTV
+    description: Total lifetime value across all customers
+    type: simple
+    type_params:
+      measure: total_lifetime_value
+
+  # Payment Metrics
+  - name: total_payment_amount
+    label: Total Payment Amount
+    description: Total amount processed through payments
+    type: simple
+    type_params:
+      measure: payment_amount
+
+  - name: total_payments
+    label: Total Payments
+    description: Total number of payment transactions
+    type: simple
+    type_params:
+      measure: payment_count
+
+  - name: successful_payment_count
+    label: Successful Payments
+    description: Number of successful payments
+    type: simple
+    type_params:
+      measure: successful_payments
+
+  - name: payment_success_rate
+    label: Payment Success Rate
+    description: Percentage of successful payments
+    type: ratio
+    type_params:
+      numerator: successful_payments
+      denominator: payment_count
+
+  # Advanced Business Metrics
+  - name: revenue_per_customer
+    label: Revenue per Customer
+    description: Average revenue generated per customer
+    type: ratio
+    type_params:
+      numerator: amount
+      denominator: customer_count
+
+  - name: orders_per_customer
+    label: Orders per Customer
+    description: Average number of orders per customer
+    type: simple
+    type_params:
+      measure: total_orders_by_customers
+
 models:
   - name: dim_customers
     description: customers dimension model
