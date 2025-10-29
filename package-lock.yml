@@ -8,10 +8,7 @@ packages:
 - package: metaplane/dbt_expectations
   name: dbt_expectations
   version: 0.10.9
-- package: tnightengale/dbt_meta_testing
-  name: dbt_meta_testing
-  version: 0.3.6
 - package: dbt-labs/dbt_utils
   name: dbt_utils
-  version: 1.3.0
-sha1_hash: 3b8090d6973dbc57e5569d4d1aeb81e4627c2052
+  version: 1.3.1
+sha1_hash: 605bc1b5026c3acd9f4ace2240a0346baffbcbad
