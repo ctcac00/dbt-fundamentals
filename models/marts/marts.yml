@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: dim_customers
-    description: "customers dimension modelcustomers dimension modelsemantic model for dim_customers\n"
+    description: "Customers dimension model."
     columns:
       - name: customer_id
         description: The primary key for customers.
@@ -60,7 +60,7 @@ models:
         description: Gross customer lifetime spend inclusive of taxes.
         type: simple
   - name: fct_orders
-    description: "orders fact modelorders fact modelOrder fact table. This table’s grain is one row per order\n"
+    description: "Orders fact model. This table’s grain is one row per order."
     tests:
       - dbt_utils.expression_is_true:
           arguments:
@@ -131,7 +131,7 @@ models:
         label: "Large Orders"
         filter: |
           {{ Metric('order_total', group_by=['order_id']) }} >=  20
-  # Ratio type metric
+        # Ratio type metric
         agg: sum
         expr: 1
       - name: order_value_p99
@@ -147,7 +147,7 @@ models:
           name: order_total
         denominator:
           name: order_count
-  # Cumulative type metrics
+      # Cumulative type metrics
       - name: order_total_1
         description: The total amount for each order including taxes.
         agg: sum
@@ -167,3 +167,4 @@ models:
         input_metrics:
           - name: large_orders
           - name: order_count
+
