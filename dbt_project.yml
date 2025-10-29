@@ -17,8 +17,6 @@ test-paths: ["tests"]
 seed-paths: ["seeds"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
-
-target-path: "target" # directory which will store compiled SQL files
 clean-targets: # directories to be removed by `dbt clean`
   - "target"
   - "dbt_packages"
@@ -31,3 +29,5 @@ clean-targets: # directories to be removed by `dbt clean`
 # instead be materialized as tables. Any models you add to the root of the models folder will
 # continue to be built as views. These settings can be overridden in the individual model files
 # using the `{{ config(...) }}` macro
+flags:
+  require_generic_test_arguments_property: true
