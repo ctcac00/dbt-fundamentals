@@ -8,8 +8,7 @@ WITH stg_jaffle_shop__customers AS (
   FROM {{ ref('fct_orders') }}
 ), rename_1 AS (
   SELECT
-    CUSTOMER_ID AS CR_CUSTOMER_ID,
-    REGION
+    CUSTOMER_ID AS CR_CUSTOMER_ID
   FROM stg_jaffle_shop__customers
 ), rename_2 AS (
   SELECT
