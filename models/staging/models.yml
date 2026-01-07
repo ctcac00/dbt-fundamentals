@@ -1,0 +1,67 @@
+version: 2
+
+models:
+  - name: stg_tpch_line_items
+    description: "This model is a staging model for line items"
+    columns:
+      - name: l_orderkey
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_tpch_orders')
+                field: o_orderkey
+      - name: l_partkey
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_tpch_parts')
+                field: p_partkey
+      - name: l_suppkey
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_tpch_suppliers')
+                field: s_suppkey
+
+  - name: stg_tpch_orders
+    description: "This model is a staging model for orders"
+    columns:
+      - name: o_orderkey
+        data_tests:
+          - not_null
+          - unique
+      - name: o_orderpriority
+        description: '{{ doc("orders_priority") }}'
+        data_tests:
+          - accepted_values:
+              arguments:
+                values:
+                  ["4-NOT SPECIFIED", "2-HIGH", "3-MEDIUM", "5-LOW", "1-URGENT"]
+
+  - name: stg_tpch_part_suppliers
+    description: "This model is a staging model for part suppliers"
+    columns:
+      - name: ps_suppkey
+        data_tests:
+          - not_null
+
+  - name: stg_tpch_parts
+    description: "This model is a staging model for parts"
+    columns:
+      - name: p_partkey
+        description: "The unique part key"
+        data_tests:
+          - not_null
+          - unique
+
+  - name: stg_tpch_suppliers
+    description: "This model is a staging model for suppliers"
+    columns:
+      - name: s_suppkey
+        description: "The unique supplier key"
+        data_tests:
+          - not_null
+          - unique
