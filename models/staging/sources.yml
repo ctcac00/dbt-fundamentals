@@ -1,0 +1,72 @@
+version: 2
+
+sources:
+  - name: tpch_now
+    database: raw
+    config:
+      freshness: # default freshness
+        # changed to config in v1.9
+        warn_after: { count: 1, period: day }
+        error_after: { count: 2, period: day }
+    tables:
+      - name: orders
+        description: "This is the source data for orders"
+        columns:
+          - name: o_orderkey
+            data_tests:
+              - not_null
+              - unique
+          - name: o_orderpriority
+            data_tests:
+              - accepted_values:
+                  arguments:
+                    values:
+                      [
+                        "4-NOT SPECIFIED",
+                        "2-HIGH",
+                        "3-MEDIUM",
+                        "5-LOW",
+                        "1-URGENT",
+                      ]
+
+      - name: lineitem
+        description: "This is the source data for line items"
+        columns:
+          - name: l_orderkey
+            data_tests:
+              - not_null
+          - name: l_partkey
+            data_tests:
+              - not_null
+          - name: l_suppkey
+            data_tests:
+              - not_null
+
+  - name: tpch_sf001
+    database: raw
+    config:
+      freshness: # default freshness
+        # changed to config in v1.9
+        warn_after: { count: 1, period: day }
+        error_after: { count: 2, period: day }
+    tables:
+      - name: partsupp
+        description: "This is the source data for part supplier"
+        columns:
+          - name: ps_suppkey
+            data_tests:
+              - not_null
+      - name: part
+        description: "This is the source data for parts"
+        columns:
+          - name: p_partkey
+            data_tests:
+              - not_null
+              - unique
+      - name: supplier
+        description: "This is the source data for suppliers"
+        columns:
+          - name: s_suppkey
+            data_tests:
+              - not_null
+              - unique
