@@ -26,7 +26,6 @@ final as (
 
   select
       orders.order_id,
-      orders.customer_id,
       orders.order_date,
       coalesce (order_payments.amount, 0) as amount
 
