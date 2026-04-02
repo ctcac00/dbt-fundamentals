@@ -28,6 +28,8 @@ models:
 
   - name: fct_orders
     description: "Orders fact model. This table's grain is one row per order."
+    config:
+      access: public
     tests:
       - dbt_utils.expression_is_true:
           arguments:
