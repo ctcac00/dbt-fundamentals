@@ -1,7 +1,7 @@
 {{
     config(
         materialized='table',
-        static_analysis='unsafe'
+        static_analysis='strict'
     )
 }}
 
@@ -16,4 +16,3 @@ with spine as (
 select 
     date_day
 from spine
-
