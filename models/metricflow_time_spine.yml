@@ -7,5 +7,8 @@ models:
       - name: date_day
         description: "Daily date spine for time-based aggregations"
         granularity: day
+        tests:
+          - unique
+          - not_null
     time_spine:
       standard_granularity_column: date_day

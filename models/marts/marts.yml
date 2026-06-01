@@ -69,18 +69,49 @@ models:
 
   - name: fct_orders__deprecated
     description: Deprecated orders fact retained for backwards compatibility. This table's grain is one row per order.
+    tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "amount >= 0"
     columns:
       - name: order_id
         description: Primary key for orders.
+        tests:
+          - unique
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_jaffle_shop__orders')
+                field: order_id
       - name: customer_id
         description: Foreign key to the customer who placed the order, with legacy remapping preserved for customer ID 1.
       - name: order_date
         description: Date the order was placed.
+        tests:
+          - not_null
       - name: amount
         description: Successful payment amount for the order, defaulted to zero when no successful payment exists.
+        tests:
+          - not_null
 
   - name: fct_order_items
     description: Order item fact model combining TPCH order line detail with supplier and part attributes. This table's grain is one row per order line item.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - l_orderkey
+              - l_linenumber
+              - ps_suppkey
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "l_quantity > 0"
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "l_extendedprice >= 0"
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "ps_supplycost >= 0"
     columns:
       - name: order_item_key
         description: Surrogate key for the order line item.
@@ -137,6 +168,24 @@ models:
 
   - name: order_items
     description: Intermediate model joining TPCH orders to line items. This table's grain is one row per order line item.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - o_orderkey
+              - l_linenumber
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "l_quantity > 0"
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "l_extendedprice >= 0"
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "l_discount between 0 and 1"
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "l_tax >= 0"
     columns:
       - name: order_item_key
         description: Surrogate key for the order line item.
@@ -191,6 +240,18 @@ models:
 
   - name: part_suppliers
     description: Intermediate model joining TPCH part, supplier, and part-supplier availability data. This table's grain is one row per part and supplier combination.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - ps_partkey
+              - ps_suppkey
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "ps_availqty >= 0"
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "ps_supplycost >= 0"
     columns:
       - name: part_supplier_key
         description: Surrogate key for the part and supplier combination.
