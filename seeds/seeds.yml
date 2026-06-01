@@ -1,0 +1,12 @@
+version: 2
+
+seeds:
+  - name: employees
+    description: Seeded employee lookup that maps jaffle shop employee email addresses to related customer records.
+    columns:
+      - name: employee_id
+        description: Primary key for the employee record.
+      - name: email
+        description: Employee email address.
+      - name: customer_id
+        description: Related customer ID for the employee in jaffle shop customer data.

@@ -2,8 +2,27 @@ version: 2
 
 sources:
   - name: jaffle_shop
+    description: Raw application data from the jaffle shop transactional system.
     database: raw
     schema: jaffle_shop
     tables:
-      - name: customers 
+      - name: customers
+        description: Raw customer records from the jaffle shop app.
+        columns:
+          - name: id
+            description: Primary key for the raw customer record.
+          - name: first_name
+            description: Customer first name.
+          - name: last_name
+            description: Customer last name.
       - name: orders
+        description: Raw order records from the jaffle shop app.
+        columns:
+          - name: id
+            description: Primary key for the raw order record.
+          - name: user_id
+            description: Foreign key to the raw customer who placed the order.
+          - name: order_date
+            description: Date the order was placed.
+          - name: status
+            description: Current lifecycle status for the order.

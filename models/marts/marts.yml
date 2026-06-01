@@ -66,3 +66,163 @@ models:
                 field: customer_id
       - name: order_date
         description: Date the order was placed
+
+  - name: fct_orders__deprecated
+    description: Deprecated orders fact retained for backwards compatibility. This table's grain is one row per order.
+    columns:
+      - name: order_id
+        description: Primary key for orders.
+      - name: customer_id
+        description: Foreign key to the customer who placed the order, with legacy remapping preserved for customer ID 1.
+      - name: order_date
+        description: Date the order was placed.
+      - name: amount
+        description: Successful payment amount for the order, defaulted to zero when no successful payment exists.
+
+  - name: fct_order_items
+    description: Order item fact model combining TPCH order line detail with supplier and part attributes. This table's grain is one row per order line item.
+    columns:
+      - name: order_item_key
+        description: Surrogate key for the order line item.
+      - name: order_key
+        description: Foreign key to the TPCH order.
+      - name: line_number
+        description: Line number within the order.
+      - name: customer_key
+        description: Foreign key to the customer associated with the order.
+      - name: order_date
+        description: Date the order was placed.
+      - name: order_item_status_code
+        description: Status code for the order line item.
+      - name: part_key
+        description: Foreign key to the part purchased on the line item.
+      - name: supplier_key
+        description: Foreign key to the supplier for the purchased part.
+      - name: nation_key
+        description: Foreign key to the supplier nation.
+      - name: quantity
+        description: Quantity of the part ordered on the line item.
+      - name: base_price
+        description: Base price of the order line item before discounts and tax.
+      - name: discounted_price
+        description: Line item price after applying the item discount.
+      - name: discount_percentage
+        description: Discount percentage applied to the line item.
+      - name: tax_rate
+        description: Tax rate applied to the line item.
+      - name: gross_item_sales_amount
+        description: Gross line item sales amount before discounts and tax.
+      - name: item_discount_amount
+        description: Discount amount applied to the line item.
+      - name: discounted_item_sales_amount
+        description: Sales amount after discount and before tax.
+      - name: item_tax_amount
+        description: Tax amount applied to the discounted line item sales amount.
+      - name: net_item_sales_amount
+        description: Net sales amount after discount and tax.
+      - name: supplier_cost
+        description: Supplier cost for the part.
+      - name: order_item_count
+        description: Count of order line items represented by the row.
+      - name: ship_date
+        description: Date the line item shipped.
+      - name: commit_date
+        description: Date the supplier committed to ship the line item.
+      - name: receipt_date
+        description: Date the line item was received.
+      - name: ship_mode
+        description: Shipping mode used for the line item.
+      - name: is_return
+        description: Boolean flag indicating whether the line item was returned.
+
+  - name: order_items
+    description: Intermediate model joining TPCH orders to line items. This table's grain is one row per order line item.
+    columns:
+      - name: order_item_key
+        description: Surrogate key for the order line item.
+      - name: order_key
+        description: Foreign key to the TPCH order.
+      - name: line_number
+        description: Line number within the order.
+      - name: customer_key
+        description: Foreign key to the customer associated with the order.
+      - name: order_status_code
+        description: Status code for the parent order.
+      - name: order_date
+        description: Date the order was placed.
+      - name: order_item_status_code
+        description: Status code for the order line item.
+      - name: part_key
+        description: Foreign key to the part purchased on the line item.
+      - name: supplier_key
+        description: Foreign key to the supplier for the line item.
+      - name: quantity
+        description: Quantity of the part ordered on the line item.
+      - name: extended_price
+        description: Extended line item price from TPCH before modeled sales calculations.
+      - name: base_price
+        description: Base price of the order line item before discounts and tax.
+      - name: discounted_price
+        description: Line item price after applying the item discount.
+      - name: discount_percentage
+        description: Discount percentage applied to the line item.
+      - name: tax_rate
+        description: Tax rate applied to the line item.
+      - name: gross_item_sales_amount
+        description: Gross line item sales amount before discounts and tax.
+      - name: item_discount_amount
+        description: Discount amount applied to the line item.
+      - name: discounted_item_sales_amount
+        description: Sales amount after discount and before tax.
+      - name: item_tax_amount
+        description: Tax amount applied to the discounted line item sales amount.
+      - name: net_item_sales_amount
+        description: Net sales amount after discount and tax.
+      - name: ship_date
+        description: Date the line item shipped.
+      - name: commit_date
+        description: Date the supplier committed to ship the line item.
+      - name: receipt_date
+        description: Date the line item was received.
+      - name: ship_mode
+        description: Shipping mode used for the line item.
+      - name: is_return
+        description: Boolean flag indicating whether the line item was returned.
+
+  - name: part_suppliers
+    description: Intermediate model joining TPCH part, supplier, and part-supplier availability data. This table's grain is one row per part and supplier combination.
+    columns:
+      - name: part_supplier_key
+        description: Surrogate key for the part and supplier combination.
+      - name: part_key
+        description: Foreign key to the TPCH part.
+      - name: supplier_key
+        description: Foreign key to the TPCH supplier.
+      - name: available_quantity
+        description: Available quantity for the part from the supplier.
+      - name: cost
+        description: Supplier cost for the part.
+      - name: part_name
+        description: Name of the part.
+      - name: manufacturer
+        description: Manufacturer of the part.
+      - name: brand
+        description: Brand of the part.
+      - name: part_type
+        description: Type classification for the part.
+      - name: part_size
+        description: Size of the part.
+      - name: container
+        description: Container type for the part.
+      - name: retail_price
+        description: Retail price of the part.
+      - name: supplier_name
+        description: Name of the supplier.
+      - name: supplier_address
+        description: Street address of the supplier.
+      - name: nation_key
+        description: Foreign key to the supplier nation.
+      - name: phone_number
+        description: Supplier phone number.
+      - name: account_balance
+        description: Supplier account balance.

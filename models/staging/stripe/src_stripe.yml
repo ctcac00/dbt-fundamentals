@@ -2,10 +2,12 @@ version: 2
 
 sources:
   - name: stripe
+    description: Raw payment data from Stripe.
     database: raw
     schema: stripe
     tables:
       - name: payment
+        description: Raw payment records captured from Stripe.
         config:
           loaded_at_field: _batched_at
           freshness:
@@ -13,18 +15,23 @@ sources:
             error_after: { count: 24, period: hour }
         columns:
           - name: id
+            description: Primary key for the raw payment record.
             data_tests:
               - unique:
                   config:
                     severity: error
                     error_if: ">100"
                     warn_if: ">10"
+          - name: orderid
+            description: Foreign key to the jaffle shop order associated with the payment.
           - name: paymentmethod
+            description: Payment method used for the transaction.
             data_tests:
               - not_null:
                   arguments: 
                     where: "status = 'success'"
           - name: status
+            description: Payment status returned by Stripe.
             data_tests:
               - accepted_values:
                   arguments:
@@ -32,4 +39,9 @@ sources:
                   config:
                     limit: 10
                     store_failures: true
-
+          - name: amount
+            description: Payment amount for the transaction.
+          - name: created
+            description: Timestamp when the payment was created in Stripe.
+          - name: _batched_at
+            description: Timestamp when the payment record was loaded into the raw schema.
